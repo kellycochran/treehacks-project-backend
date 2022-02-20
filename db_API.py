@@ -4,13 +4,14 @@ from pymongo import MongoClient
 from bson.son import SON
 from bson.objectid import ObjectId
 
+HEADERS = {'Access-Control-Allow-Origin': '*'}
 
 def get_db(db_name = 'fliq_data'):
     client = MongoClient('localhost', 27017)
     return client[db_name]
 
 
-@hug.get('/food/search')
+@hug.get('/food/search', response_headers=HEADERS)
 def search_food_names(food_prefix: hug.types.text):
     db = get_db()
     table_food = db["Food"]
@@ -21,7 +22,7 @@ def search_food_names(food_prefix: hug.types.text):
     return matches
 
 
-@hug.get('/food/list')
+@hug.get('/food/list', response_headers=HEADERS)
 def list_top_n_foods(user_id: hug.types.text, n: int):
     db = get_db()
     table_eatinglog = db["EatingLog"]
@@ -34,7 +35,7 @@ def list_top_n_foods(user_id: hug.types.text, n: int):
     return list(table_eatinglog.aggregate(pipeline))[:n]
 
 
-@hug.get('/symptom/list')
+@hug.get('/symptom/list', response_headers=HEADERS)
 def list_symptoms_and_scales(user_id: hug.types.text):
     db = get_db()
     table_y = db["Y"]

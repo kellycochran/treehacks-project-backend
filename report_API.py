@@ -10,6 +10,9 @@ import matplotlib.pyplot as plt
 import matplotlib.dates as pltdates
 import io
 
+HEADERS = {'Access-Control-Allow-Origin': '*'}
+
+
 COLOR_DARK_BLUE = "#117095"
 
 mpl.rcParams['text.color'] = COLOR_DARK_BLUE
@@ -23,12 +26,12 @@ MONTHS = ["Jan", "Feb", "Mar", "Apr", "May",
           "Nov", "Dec"]
 
 
-def get_db(db_name = 'test_data'):
+def get_db(db_name = 'fliq_data'):
     client = MongoClient('localhost', 27017)
     return client[db_name]
 
 
-@hug.get('/reports/symptom')
+@hug.get('/reports/symptom', response_headers=HEADERS)
 def plot_symptom_over_time(symptom_name): 
     db = get_db()
     user_id = db["User"].find_one()["_id"]
